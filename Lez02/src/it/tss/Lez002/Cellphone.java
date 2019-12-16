@@ -5,6 +5,7 @@
  */
 package it.tss.Lez002;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -12,12 +13,41 @@ import java.util.Objects;
  * @author tss
  */
 public class Cellphone {
+
+    private static ArrayList<Tariffa> tariffario = new ArrayList<>();
     private String gestore;
     private String numtel;
 
     public Cellphone(String gestore, String numtel) {
         this.gestore = gestore;
         this.numtel = numtel;
+    }
+
+    /**
+     * ritorna il costo della chiamata in base al tariffario ed ai minuti
+     *
+     * @param phone
+     * @param minuti
+     * @return
+     */
+    public double getCost(Cellphone phone, int minuti) {
+        for (Tariffa t : tariffario) {
+            if (t.from.equals(this.gestore) && t.to.equals(phone.gestore)) {
+                return t.cost * minuti;
+            }
+        }
+        throw new IllegalArgumentException("Tariffario non disponibile...");
+    }
+
+    /**
+     * aggiunge una voce al tariffario
+     *
+     * @param from
+     * @param to
+     * @param cost
+     */
+    public static void setCost(String from, String to, double cost) {
+        tariffario.add(new Tariffa(from, to, cost));
     }
 
     @Override
@@ -61,19 +91,20 @@ public class Cellphone {
     public void setNumtel(String numtel) {
         this.numtel = numtel;
     }
-    
-    
+
 }
-class Tariffa{
+
+class Tariffa {
+
     String to;
     String from;
     double cost;
-    
-    public Tariffa(String from, String to,double cost){
-        
+
+    public Tariffa(String from, String to, double cost) {
+
         this.from = from;
         this.to = to;
         this.cost = cost;
-                
+
     }
 }
